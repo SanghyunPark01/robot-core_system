@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="robot-core_system" type="mux_node" name="mux_node" />
+    <node pkg="robot-core_system" type="mod_setter_node" name="mod_setter_node" />
+    <node pkg="robot-core_system" type="check_docking_complete_node" name="check_docking_complete_node" />
+    <node pkg="robot-core_system" type="timer_flag_node" name="timer_flag_node" output="screen"/>
+</launch>
