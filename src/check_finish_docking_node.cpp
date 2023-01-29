@@ -58,9 +58,9 @@ void NodeServer::callback_docking_cmd_vel(const geometry_msgs::Twist &docking_cm
     else _bChceckDocking = false;
 }
 bool NodeServer::_nCheckVelocity(geometry_msgs::Twist cmd_vel){
-    if(cmd_vel.angular.z != 0) return false;
-    if(cmd_vel.linear.x != 0) return false;
-    if(cmd_vel.linear.y != 0) return false;
+    if(_bSmallMode || cmd_vel.angular.z > 0.05) return false;
+    if(_bSmallMode || cmd_vel.linear.x > 0.05) return false;
+    if(_bSmallMode || cmd_vel.linear.y > 0.05) return false;
     return true;
 }
 void NodeServer::callback_small_mode(const std_msgs::Int32 &small_mode_flag){
