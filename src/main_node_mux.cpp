@@ -24,7 +24,8 @@ private:
     ros::Subscriber _sub_docking_cmd_vel;
     ros::Subscriber _sub_small_mode;
 
-    bool _bBigMode, _bSmallMode;
+    bool _bBigMode = true;
+    bool _bSmallMode = true;
 public:
     NodeServer(){
         _pub_vel = _nh.advertise<geometry_msgs::Twist>("/mux_output_cmd_vel",1);
@@ -32,8 +33,8 @@ public:
         _sub_big_mode = _nh.subscribe("/Big_mode", 10, &NodeServer::callback_big_mode, this); // 1: full automatic, 0: only docking
         _sub_small_mode = _nh.subscribe("/small_mode_output", 10, &NodeServer::callback_small_mode, this); // 1: Navigation, 0: docking
 
-        _sub_nav_cmd_vel = _nh.subscribe("/nav_cmd_vel", 1, &NodeServer::callback2, this); //sub Navigation cmd_vel
-        _sub_docking_cmd_vel = _nh.subscribe("/docking_cmd_vel", 1, &NodeServer::callback3, this); //sub Docking System cmd_vel
+        _sub_nav_cmd_vel = _nh.subscribe("/cmd_vel", 1, &NodeServer::callback2, this); //sub Navigation cmd_vel
+        _sub_docking_cmd_vel = _nh.subscribe("/docking/cmd_vel", 1, &NodeServer::callback3, this); //sub Docking System cmd_vel
     }
     void callback_big_mode(const std_msgs::Int32 &big_mode_flag);
     void callback_small_mode(const std_msgs::Int32 &small_mode_flag);
@@ -41,12 +42,13 @@ public:
     void callback3(const geometry_msgs::Twist &docking_vel);
 };
 void NodeServer::callback_big_mode(const std_msgs::Int32 &big_mode_flag){
-    if(big_mode_flag.data == 0)_bBigMode = false;
-    else _bBigMode = true;
+    //if(big_mode_flag.data == 0)_bBigMode = false;
+    //else _bBigMode = true;
 }
 void NodeServer::callback_small_mode(const std_msgs::Int32 &small_mode_flag){
     if(small_mode_flag.data == 0)_bSmallMode = false;
     else _bSmallMode = true;
+    std::cout << _bSmallMode << "\n";
 }
 void NodeServer::callback2(const geometry_msgs::Twist &nav_vel){
     if(_bSmallMode && _bBigMode){
@@ -56,7 +58,7 @@ void NodeServer::callback2(const geometry_msgs::Twist &nav_vel){
 void NodeServer::callback3(const geometry_msgs::Twist &docking_vel){
     if(!_bBigMode){
         _pub_vel.publish(docking_vel);
-    }else if(!_bSmallMode && _bBigMode){
+    }else if((!_bSmallMode) && _bBigMode){
         _pub_vel.publish(docking_vel);
     }
 }

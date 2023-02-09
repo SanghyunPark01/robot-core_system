@@ -31,7 +31,7 @@ private:
     ros::Subscriber _sub_timer_flag;
     ros::Subscriber _sub_finish_docking;
 
-    int _bBigMode = 0;
+    int _bBigMode = 1;
     int _nArriveGP = 0;
     int _timer_flag = 0;
     int _finish_docking = 0;
@@ -51,13 +51,13 @@ public:
     void callback_finish_docking(const std_msgs::Int32 &finish_docking);
     void publish_function(void);
     void publish_function_Dock(void);
-    bool BigModeFlag(void){
+    int BigModeFlag(void){
         return _bBigMode;
     }
 };
 void NodeServer::callback_big_mode(const std_msgs::Int32 &big_mode_flag){
-    if(big_mode_flag.data == 0)_bBigMode = 0;
-    else _bBigMode = 1;
+    // if(big_mode_flag.data == 0)_bBigMode = 0;
+    // else _bBigMode = 1;
 }
 void NodeServer::callback_GP_arrive(const std_msgs::Int32 &gp_flag){
     if(gp_flag.data == 2)_nArriveGP = 2;
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     NodeServer subpub;
     ros::Rate loop_rate(1000);
     while(ros::ok()){
-        if(subpub.BigModeFlag()){
+        if(subpub.BigModeFlag()==1){
             subpub.publish_function();
         }else{
             subpub.publish_function_Dock(); //Only docking mode

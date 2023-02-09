@@ -11,8 +11,8 @@ Pub. 타이머 플래그 : 5분 주행 / 30초 충전 (2: 5분완료(nav mode & 
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 
-#define Mode1_sec 30000 //charging
-#define Mode2_sec 300000
+#define Mode1_sec 20000 //charging
+#define Mode2_sec 60000
 
 int nTimer_mode = 2; //2: 주행중 , 1: 도킹완료 후
 int count = 0;
@@ -34,11 +34,11 @@ public:
     }
     void callback_finish_docking(const std_msgs::Int32 &value);
     void callback_Big_mode(const std_msgs::Int32 &value){
-        if(value.data == 0){
-            nBigMode = 0;
-        }else if(value.data == 1){
-            nBigMode = 1;
-        }
+        // if(value.data == 0){
+        //     nBigMode = 0;
+        // }else if(value.data == 1){
+        //     nBigMode = 1;
+        // }
     }
     void publish(int pub){
         std_msgs::Int32 msg;

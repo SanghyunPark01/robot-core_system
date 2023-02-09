@@ -45,10 +45,10 @@ void NodeServer::callback_docking_cmd_vel(const geometry_msgs::Twist &docking_cm
         nBuffer[cnt] = 0;
     }
     cnt ++;
-    if(cnt >= 10000)cnt = 0;
+    if(cnt >= 200)cnt = 0;
 
     bool flag = true;
-    for(int i=0; i< 10000; i++){
+    for(int i=0; i< 200; i++){
         if(nBuffer[i] == 0){
             flag =false;
             break;
@@ -58,9 +58,9 @@ void NodeServer::callback_docking_cmd_vel(const geometry_msgs::Twist &docking_cm
     else _bChceckDocking = false;
 }
 bool NodeServer::_nCheckVelocity(geometry_msgs::Twist cmd_vel){
-    if(_bSmallMode || cmd_vel.angular.z > 0.05) return false;
-    if(_bSmallMode || cmd_vel.linear.x > 0.05) return false;
-    if(_bSmallMode || cmd_vel.linear.y > 0.05) return false;
+    if(_bSmallMode || std::abs(cmd_vel.angular.z) > 0.08) return false;
+    if(_bSmallMode || std::abs(cmd_vel.linear.x) > 0.08) return false;
+    if(_bSmallMode || std::abs(cmd_vel.linear.y) > 0.08) return false;
     return true;
 }
 void NodeServer::callback_small_mode(const std_msgs::Int32 &small_mode_flag){
